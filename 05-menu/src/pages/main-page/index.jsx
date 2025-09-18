@@ -1,36 +1,36 @@
 import { useState } from "react";
 
-import data from "../../data";
-const categoriesData = ["all", ...new Set(data.map((item) => item.category))];
+import menuData from "../../data";
+const categoryList = menuData.map((item) => item.category);
+const categoryItems = new Set(categoryList);
+const categoriesData = ["all", ...categoryItems];
+// const categoriesData = ["all", ...new Set(menuData.map((item) => item.category))];
 
 import MenuPage from "./MenuPage";
-
 import Title from "./parts/Title";
 import Categories from "./parts/Categories";
 
 function Layout() {
-	const [menu, setMenu] = useState(data);
+	const [menu, setMenu] = useState(menuData);
 	const [categories, setCategories] = useState(categoriesData);
-	const [searchMenu, setSearchMenu] = useState(menu);
 
-	const handleSearch = (category) => {
-		const newMenu = menu.filter((item) => item.category === category);
-		setSearchMenu((currentState) => {
-			if (category === "all") {
-				return menu;
-			}
-			return newMenu;
-		});
+	const handleFilterMenu = (category) => {
+		if (category === "all") {
+			setMenu(menuData);
+			return;
+		}
+		const newMenu = menuData.filter((item) => item.category === category);
+		setMenu(newMenu);
 	};
 
 	return (
 		<div className="menu">
 			<header>
 				<Title title="our menu" />
-				<Categories categories={categories} evnetHandler={handleSearch} />
+				<Categories categories={categories} eventHandler={handleFilterMenu} />
 			</header>
 			<main>
-				<MenuPage menu={searchMenu} />
+				<MenuPage menu={menu} />
 			</main>
 		</div>
 	);
